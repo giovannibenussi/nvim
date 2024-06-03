@@ -1,5 +1,13 @@
 # kickstart.nvim
 
+# Install
+
+Clone this repository and you're good to go!
+
+```sh
+git clone git@github.com:giovannibenussi/nvim.git ~/.config/nvim
+```
+
 ## Introduction
 
 A starting point for Neovim that is:
