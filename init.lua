@@ -165,7 +165,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>ac', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -927,7 +927,7 @@ vim.keymap.set('n', '<leader>w', ':w<CR>', { noremap = true, silent = true })
 -- Quit file
 vim.keymap.set('n', '<leader>q', ':q<CR>', { noremap = true, silent = true })
 -- Reload file
-vim.keymap.set('n', '<leader><leader>r', ':e!<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader><leader>r', ':e!<CR>:echo "File reloaded"<CR>', { noremap = true, silent = true })
 -- Go to previous buffer and location and then center the screen
 vim.keymap.set('n', '<leader>s<leader>', ':e#<CR>zz', { noremap = true, silent = true })
 -- Copy current file path to clipboard
