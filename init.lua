@@ -1007,3 +1007,4 @@ end
 
 vim.keymap.set('n', '<leader>qf', quickfix, opts)
 vim.keymap.set('n', '<leader><leader>f', ':EslintFixAll<CR>:echo "Eslint fix all"<CR>', opts)
+vim.opt.clipboard = ''
