@@ -5,7 +5,7 @@ return {
     keys = 'etovxqpdygfblzhckisuran',
   },
   config = function()
-    -- hop.nvim
+    -- From https://dev.to/kquirapas/neovim-on-steroids-vim-sneak-easymotion-hopnvim-4k17
     require('hop').setup()
 
     -- normal mode (easymotion-like)
