@@ -152,7 +152,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 2
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -505,7 +505,7 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          -- map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -660,7 +660,7 @@ require('lazy').setup({
       {
         '<leader>p',
         function()
-          require('conform').format { async = true, lsp_fallback = true }
+          require('conform').format { async = true, lsp_fallback = false }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -668,21 +668,11 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = true,
-      format_on_save = function(bufnr)
-        -- Disable with a global or buffer-local variable
-        if vim.g.disable_autoformat then
-          return false
-        end
-
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, javascript = true, typescript = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      format_on_save = {
+        -- These options will be passed to conform.format()
+        timeout_ms = 500,
+        lsp_fallback = false,
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -690,7 +680,10 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        javascript = { { 'rettier_d', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
+        javascript = { { 'prettierd', 'prettier' } },
+        javascriptreact = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -715,12 +708,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -802,9 +795,28 @@ require('lazy').setup({
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
-          { name = 'nvim_lsp' },
           { name = 'luasnip' },
+          { name = 'nvim_lsp' },
           { name = 'path' },
+        },
+        sorting = {
+          priority_weight = 1.0,
+          comparators = {
+            cmp.config.compare.recently_used,
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            function(a1, a2)
+              if a1 == 'Snippet' and a2 == 'Variable' or a2 == 'Function' then
+                return true
+              end
+              return false
+            end,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
         },
       }
     end,
@@ -921,6 +933,9 @@ require('lazy').setup({
   require 'custom.plugins.supermaven-nvim',
   require 'custom.plugins.nvim-tmux-navigation',
   require 'custom.plugins.better-ts-errors',
+  require 'custom.plugins.nvim-emmet',
+  require 'custom.plugins.nvim-comment',
+  require 'custom.plugins.boole',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -967,7 +982,9 @@ vim.keymap.set('n', '<leader>s<leader>', ':e#<CR>zz', { noremap = true, silent =
 -- Copy current file path to clipboard
 vim.keymap.set('n', '<leader>fm', ':let @+=expand("%")<CR>:echo "File path copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Toggle formatting with <leader><leader>p
-vim.keymap.set('n', '<leader><leader>p', ':FormatDisable<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<leader><leader>p', ':FormatDisable<CR>', { noremap = true, silent = true })
+-- Toggle formatting with <leader><leader>p
+vim.keymap.set('n', '<leader><leader>p', ':FormatToggle<CR>', { noremap = true, silent = true })
 
 -- Go to previous/next diagnostic message
 vim.keymap.set('n', '<leader><leader>n', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -975,14 +992,29 @@ vim.keymap.set('n', '<leader><leader>m', vim.diagnostic.goto_prev, { desc = 'Go 
 
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   vim.g.disable_autoformat = true
+  print 'Formatting disabled'
 end, {
   desc = 'Disable autoformat-on-save',
   bang = true,
 })
+
 vim.api.nvim_create_user_command('FormatEnable', function()
   vim.g.disable_autoformat = false
+  print 'Formatting enabled'
 end, {
   desc = 'Re-enable autoformat-on-save',
+})
+
+vim.api.nvim_create_user_command('FormatToggle', function()
+  if vim.g.disable_autoformat then
+    vim.g.disable_autoformat = false
+    print 'Formatting enabled'
+  else
+    vim.g.disable_autoformat = true
+    print 'Formatting disabled'
+  end
+end, {
+  desc = 'Toggle autoformat-on-save',
 })
 
 local opts = { noremap = true, silent = true }
@@ -1008,3 +1040,4 @@ end
 vim.keymap.set('n', '<leader>qf', quickfix, opts)
 vim.keymap.set('n', '<leader><leader>f', ':EslintFixAll<CR>:echo "Eslint fix all"<CR>', opts)
 vim.opt.clipboard = ''
+vim.keymap.set('n', '<leader><leader>t', ':tab sb<CR>', opts)
