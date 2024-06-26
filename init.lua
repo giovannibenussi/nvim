@@ -711,6 +711,7 @@ require('lazy').setup({
           {
             'rafamadriz/friendly-snippets',
             config = function()
+              require('luasnip.loaders.from_snipmate').lazy_load()
               require('luasnip.loaders.from_vscode').lazy_load()
             end,
           },
@@ -912,6 +913,9 @@ require('lazy').setup({
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
   },
+  {
+    'christoomey/vim-tmux-runner',
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -1041,3 +1045,21 @@ vim.keymap.set('n', '<leader>qf', quickfix, opts)
 vim.keymap.set('n', '<leader><leader>f', ':EslintFixAll<CR>:echo "Eslint fix all"<CR>', opts)
 vim.opt.clipboard = ''
 vim.keymap.set('n', '<leader><leader>t', ':tab sb<CR>', opts)
+
+-- Close all buffers but the current one
+vim.keymap.set('n', '<leader><leader>at', ':tabonly<CR>', opts)
+vim.keymap.set('n', 's', 'xi', { noremap = true })
+
+vim.keymap.set('i', '<C-n>', 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false,
+})
+-- Use relative line numbers
+vim.o.relativenumber = true
+
+vim.keymap.set('n', '<leader>vap', ':VtrAttachToPane<CR>')
+vim.keymap.set('n', '<leader>vsf', ':VtrSendFile<CR>')
+vim.keymap.set('n', '<leader>m', ':VtrSendCommandToRunner<CR>')
+vim.keymap.set('n', '<leader>or', ':VtrOpenRunner<CR>')
+vim.keymap.set('n', '<leader>fc', ':VtrFlushCommand<CR>')
+vim.opt.mouse = ''
