@@ -225,6 +225,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  { 'wakatime/vim-wakatime', lazy = false },
   'github/copilot.vim',
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -983,8 +984,10 @@ vim.keymap.set('n', '<leader>q', ':q<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader><leader>r', ':e!<CR>:echo "File reloaded"<CR>', { noremap = true, silent = true })
 -- Go to previous buffer and location and then center the screen
 vim.keymap.set('n', '<leader>s<leader>', ':e#<CR>zz', { noremap = true, silent = true })
--- Copy current file path to clipboard
-vim.keymap.set('n', '<leader>fm', ':let @+=expand("%")<CR>:echo "File path copied to clipboard"<CR>', { noremap = true, silent = true })
+-- Copy current file relative path to clipboard
+vim.keymap.set('n', '<leader>fn', ':let @+=expand("%:.")<CR>:echo "Relative file path copied to clipboard"<CR>', { noremap = true, silent = true })
+-- Copy current file absolute path to clipboard
+vim.keymap.set('n', '<leader>fm', ':let @+=expand("%")<CR>:echo "Absolute file path copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Toggle formatting with <leader><leader>p
 -- vim.keymap.set('n', '<leader><leader>p', ':FormatDisable<CR>', { noremap = true, silent = true })
 -- Toggle formatting with <leader><leader>p
@@ -1063,3 +1066,5 @@ vim.keymap.set('n', '<leader>m', ':VtrSendCommandToRunner<CR>')
 vim.keymap.set('n', '<leader>or', ':VtrOpenRunner<CR>')
 vim.keymap.set('n', '<leader>fc', ':VtrFlushCommand<CR>')
 vim.opt.mouse = ''
+
+vim.cmd 'Copilot disable'
