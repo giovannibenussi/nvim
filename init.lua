@@ -493,7 +493,9 @@ require('lazy').setup({
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', function()
+            ts.lsp_references { include_declaration = false }
+          end, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
@@ -598,7 +600,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
+        tsserver = {},
         --
         eslint = {},
 
@@ -647,15 +649,6 @@ require('lazy').setup({
         },
       }
     end,
-  },
-
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {
-      separate_diagnostic_server = true,
-      code_lens = 'all',
-    },
   },
 
   { -- Autoformat
