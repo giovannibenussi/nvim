@@ -355,7 +355,11 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
-          file_ignore_patterns = { 'node_modules' },
+          file_ignore_patterns = { 'node_modules', 'outerbase.js' },
+          -- layout_strategy = 'vertical',
+          layout_config = {
+            vertical = { width = 200 },
+          },
           preview = {
             treesitter = true,
           },
@@ -714,6 +718,7 @@ require('lazy').setup({
             config = function()
               require('luasnip.loaders.from_snipmate').lazy_load()
               require('luasnip.loaders.from_vscode').lazy_load()
+              require('luasnip.loaders.from_vscode').lazy_load { paths = { './snippets.js' } }
             end,
           },
         },
@@ -725,6 +730,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
     },
     config = function()
       -- See `:help cmp`
@@ -800,6 +806,7 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'nvim_lsp' },
           { name = 'path' },
+          { name = 'buffer' },
         },
         sorting = {
           priority_weight = 1.0,

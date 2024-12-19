@@ -5,6 +5,7 @@ return {
   config = function()
     require('supermaven-nvim').setup {
       color = {
+        accept_suggestion = '<Tab>',
         suggestion_color = '#15803d',
         cterm = 244,
       },
