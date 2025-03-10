@@ -499,9 +499,7 @@ require('lazy').setup({
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', function()
-            ts.lsp_references { include_declaration = false }
-          end, '[G]oto [R]eferences')
+          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
@@ -684,10 +682,10 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        typescript = { { 'prettierd', 'prettier' } },
-        typescriptreact = { { 'prettierd', 'prettier' } },
-        javascript = { { 'prettierd', 'prettier' } },
-        javascriptreact = { { 'prettierd', 'prettier' } },
+        typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        javascript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
       },
     },
   },
@@ -892,7 +890,8 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      -- ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'go' },
+      ensure_installed = 'all',
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -919,6 +918,7 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+    dependencies = { 'tree-sitter/tree-sitter-go' },
   },
   {
     'christoomey/vim-tmux-runner',
@@ -941,7 +941,7 @@ require('lazy').setup({
   require 'kickstart.plugins.hop',
   require 'kickstart.plugins.nvim-surround',
   require 'custom.plugins.nvim-emmet',
-  require 'custom.plugins.supermaven-nvim',
+  -- require 'custom.plugins.supermaven-nvim',
   require 'custom.plugins.nvim-tmux-navigation',
   require 'custom.plugins.better-ts-errors',
   require 'custom.plugins.nvim-emmet',
@@ -994,6 +994,10 @@ vim.keymap.set('n', '<leader>s<leader>', ':e#<CR>zz', { noremap = true, silent =
 vim.keymap.set('n', '<leader>fn', ':let @+=expand("%:.")<CR>:echo "Relative file path copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Copy current file absolute path to clipboard
 vim.keymap.set('n', '<leader>fm', ':let @+=expand("%")<CR>:echo "Absolute file path copied to clipboard"<CR>', { noremap = true, silent = true })
+-- Copy current file name to clipboard
+vim.keymap.set('n', '<leader>ff', ':let @+=expand("%:t")<CR>:echo "File name copied to clipboard"<CR>', { noremap = true, silent = true })
+-- Copy current file name without extension to clipboard
+vim.keymap.set('n', '<leader>fe', ':let @+=expand("%:t:r")<CR>:echo "File name without extension copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Toggle formatting with <leader><leader>p
 -- vim.keymap.set('n', '<leader><leader>p', ':FormatDisable<CR>', { noremap = true, silent = true })
 -- Toggle formatting with <leader><leader>p
@@ -1071,6 +1075,7 @@ vim.keymap.set('n', '<leader>vsf', ':VtrSendFile<CR>')
 vim.keymap.set('n', '<leader>m', ':VtrSendCommandToRunner<CR>')
 vim.keymap.set('n', '<leader>or', ':VtrOpenRunner<CR>')
 vim.keymap.set('n', '<leader>fc', ':VtrFlushCommand<CR>')
+vim.keymap.set('n', '<leader>fr', ':VtrFocusRunner<CR>')
 vim.opt.mouse = ''
 
-vim.cmd 'Copilot disable'
+-- vim.cmd 'Copilot disable'
