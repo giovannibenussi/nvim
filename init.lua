@@ -366,9 +366,10 @@ require('lazy').setup({
           layout_config = {
             vertical = { width = 200 },
           },
-          preview = {
-            treesitter = true,
-          },
+          preview = false,
+          -- preview = {
+          -- treesitter = true,
+          -- },
           --   mappings = {
           --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           --   },
@@ -439,6 +440,21 @@ require('lazy').setup({
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       { 'folke/neodev.nvim', opts = {} },
+    },
+    opts = {
+      servers = {
+        vtsls = {
+          settings = {
+            typescript = {
+              preferences = {
+                includeCompletionsForModuleExports = true,
+                includeCompletionsForImportStatements = true,
+                importModuleSpecifier = 'non-relative',
+              },
+            },
+          },
+        },
+      },
     },
     setup = {
       eslint = function()
@@ -715,7 +731,7 @@ require('lazy').setup({
             config = function()
               require('luasnip.loaders.from_snipmate').lazy_load()
               require('luasnip.loaders.from_vscode').lazy_load()
-              require('luasnip.loaders.from_vscode').lazy_load { paths = { './snippets.js' } }
+              require('luasnip.loaders.from_vscode').lazy_load { paths = { './snippets' } }
             end,
           },
         },
