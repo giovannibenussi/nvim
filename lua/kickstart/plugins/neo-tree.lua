@@ -1,5 +1,8 @@
 -- Neo-tree is a Neovim plugin to browse the file system
 -- https://github.com/nvim-neo-tree/neo-tree.nvim
+--
+-- Shortcuts:
+-- Shift + F to toggle Neo-tree width
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
@@ -52,4 +55,29 @@ return {
       end,
     },
   },
+  config = function(_, opts)
+    require('neo-tree').setup(opts)
+
+    -- Add Shift+A to toggle Neo-tree width when in Neo-tree buffer
+    local neo_tree_width = 40
+    local neo_tree_toggle_width = function()
+      local win = vim.api.nvim_get_current_win()
+      local current_width = vim.api.nvim_win_get_width(win)
+      if current_width < neo_tree_width then
+        vim.cmd('vertical resize ' .. neo_tree_width)
+      else
+        vim.cmd 'vertical resize 25'
+      end
+    end
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'neo-tree',
+      callback = function()
+        vim.keymap.set('n', '<S-F>', neo_tree_toggle_width, {
+          buffer = true,
+          desc = 'Toggle Neo-tree Width',
+        })
+      end,
+    })
+  end,
 }
