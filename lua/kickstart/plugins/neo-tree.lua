@@ -21,6 +21,7 @@ return {
   opts = {
     filesystem = {
       window = {
+        width = 30,
         mappings = {
           ['\\'] = 'close_window',
           ['<C-n>'] = 'close_window',
@@ -59,14 +60,15 @@ return {
     require('neo-tree').setup(opts)
 
     -- Add Shift+A to toggle Neo-tree width when in Neo-tree buffer
-    local neo_tree_width = 40
+    local neo_tree_width = 80
     local neo_tree_toggle_width = function()
       local win = vim.api.nvim_get_current_win()
       local current_width = vim.api.nvim_win_get_width(win)
+      vim.notify('Current width: ' .. current_width, vim.log.levels.INFO)
       if current_width < neo_tree_width then
         vim.cmd('vertical resize ' .. neo_tree_width)
       else
-        vim.cmd 'vertical resize 25'
+        vim.cmd 'vertical resize 30'
       end
     end
 
