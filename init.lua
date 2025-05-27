@@ -366,7 +366,7 @@ require('lazy').setup({
           layout_config = {
             vertical = { width = 200 },
           },
-          preview = false,
+          preview = true,
           -- preview = {
           -- treesitter = true,
           -- },
@@ -1011,9 +1011,9 @@ vim.keymap.set('n', '<leader><leader>r', ':e!<CR>:echo "File reloaded"<CR>', { n
 -- Go to previous buffer and location and then center the screen
 vim.keymap.set('n', '<leader>s<leader>', ':e#<CR>zz', { noremap = true, silent = true })
 -- Copy current file relative path to clipboard
-vim.keymap.set('n', '<leader>fn', ':let @+=expand("%:.")<CR>:echo "Relative file path copied to clipboard"<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fm', ':let @+=expand("%:.")<CR>:echo "Relative file path copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Copy current file absolute path to clipboard
-vim.keymap.set('n', '<leader>fm', ':let @+=expand("%")<CR>:echo "Absolute file path copied to clipboard"<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fn', ':let @+=expand("%")<CR>:echo "Absolute file path copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Copy current file name to clipboard
 vim.keymap.set('n', '<leader>ff', ':let @+=expand("%:t")<CR>:echo "File name copied to clipboard"<CR>', { noremap = true, silent = true })
 -- Copy current file name without extension to clipboard

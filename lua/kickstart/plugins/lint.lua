@@ -5,6 +5,8 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+      local eslint_enabled = false
+
       lint.linters_by_ft = {
         -- markdown = { 'markdownlint' },
         javascript = { 'eslint_d' },
@@ -51,9 +53,21 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          require('lint').try_lint()
+          if eslint_enabled then
+            require('lint').try_lint()
+          end
         end,
       })
+
+      vim.api.nvim_create_user_command('DisableEslint', function()
+        eslint_enabled = false
+        vim.notify('Eslint disabled', vim.log.levels.INFO)
+      end, {})
+
+      vim.api.nvim_create_user_command('EnableEslint', function()
+        eslint_enabled = true
+        vim.notify('Eslint enabled', vim.log.levels.INFO)
+      end, {})
     end,
   },
 }
