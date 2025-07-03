@@ -366,7 +366,9 @@ require('lazy').setup({
           layout_config = {
             vertical = { width = 200 },
           },
-          preview = true,
+          preview = {
+            filesize_limit = 0.5555,
+          },
           -- preview = {
           -- treesitter = true,
           -- },
@@ -449,7 +451,7 @@ require('lazy').setup({
               preferences = {
                 includeCompletionsForModuleExports = true,
                 includeCompletionsForImportStatements = true,
-                importModuleSpecifier = 'relative',
+                importModuleSpecifier = 'non-relative',
               },
             },
           },
@@ -940,9 +942,9 @@ require('lazy').setup({
     end,
     dependencies = { 'tree-sitter/tree-sitter-go' },
   },
-  {
-    'christoomey/vim-tmux-runner',
-  },
+  { 'christoomey/vim-tmux-runner' },
+  { 'tpope/vim-fugitive' },
+  { 'tpope/vim-rhubarb' },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -1026,6 +1028,17 @@ vim.keymap.set('n', '<leader><leader>p', ':FormatToggle<CR>', { noremap = true, 
 -- Go to previous/next diagnostic message
 vim.keymap.set('n', '<leader><leader>n', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader><leader>m', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', '<leader><leader>j', function()
+  vim.diagnostic.goto_next {
+    severity = vim.diagnostic.severity.ERROR,
+  }
+end, { desc = 'Go to next [E]rror' })
+
+vim.keymap.set('n', '<leader><leader>k', function()
+  vim.diagnostic.goto_prev {
+    severity = vim.diagnostic.severity.ERROR,
+  }
+end, { desc = 'Go to previous [E]rror' })
 
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   vim.g.disable_autoformat = true
